@@ -1,0 +1,15 @@
+[package]
+name = "pihome-ui"
+description = "Shared theme, widgets, header chrome and rotation contract for pi-home apps"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+
+[dependencies]
+ratatui.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+insta.workspace = true

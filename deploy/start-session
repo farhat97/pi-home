@@ -1,0 +1,40 @@
+#!/bin/sh
+# Creates the "pihome" tmux session (one window per line of the apps file,
+# each app in a respawn loop) if it doesn't exist, then attaches to it on
+# the current terminal. Run by pihome-session.service on tty1.
+set -eu
+
+conf_dir=${PIHOME_CONF_DIR:-/etc/pihome}
+session=${PIHOME_SESSION:-pihome}
+run_app=${PIHOME_RUN_APP:-/usr/local/lib/pihome/run-app}
+apps=$conf_dir/apps
+# Optional named tmux server (tmux -L), as for pihome-rotator.
+socket=${PIHOME_TMUX_SOCKET:-}
+
+t() {
+    if [ -n "$socket" ]; then
+        tmux -L "$socket" -f "$conf_dir/tmux.conf" "$@"
+    else
+        tmux -f "$conf_dir/tmux.conf" "$@"
+    fi
+}
+
+if ! t has-session -t "=$session" 2>/dev/null; then
+    first=
+    # Lines: WINDOW-NAME COMMAND...  (blank lines and # comments ignored)
+    grep -Ev '^[[:space:]]*(#|$)' "$apps" | while read -r name cmd; do
+        if [ -z "$first" ]; then
+            t new-session -d -s "$session" -n "$name" "$run_app $cmd"
+            first=$name
+        else
+            t new-window -d -t "$session:" -n "$name" "$run_app $cmd"
+        fi
+    done
+    t has-session -t "=$session" || { echo "no apps in $apps" >&2; exit 1; }
+    t select-window -t "$session:^"
+fi
+
+if [ -n "$socket" ]; then
+    exec tmux -L "$socket" attach-session -t "=$session"
+fi
+exec tmux attach-session -t "=$session"

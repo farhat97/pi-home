@@ -1,0 +1,5 @@
+---
+source: crates/pihome-ui/src/widgets.rs
+expression: buffer_text(&buf)
+---
+■■■■·············· 24.7%

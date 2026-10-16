@@ -1,0 +1,31 @@
+[Unit]
+Description=pi-home display session (tmux on tty1)
+# Take over tty1 from the login prompt; install.sh also disables getty@tty1.
+Conflicts=getty@tty1.service
+After=getty@tty1.service systemd-user-sessions.service pihole-FTL.service
+
+[Service]
+Type=simple
+User=pihome
+Group=pihome
+ExecStart=/usr/local/lib/pihome/start-session
+StandardInput=tty
+StandardOutput=tty
+StandardError=journal
+TTYPath=/dev/tty1
+TTYReset=yes
+TTYVHangup=yes
+TTYVTDisallocate=yes
+Environment=TERM=linux
+# Shared with pihome-rotator; kept when either service stops.
+RuntimeDirectory=pihome
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
+# If the tmux client exits (e.g. someone detaches it), reattach. Stopping or
+# restarting the unit also ends the tmux server and the apps (same cgroup);
+# the next start recreates them.
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

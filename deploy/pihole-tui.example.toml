@@ -1,0 +1,23 @@
+# pihole-tui configuration.
+# Installed to /etc/pihome/pihole-tui.toml with mode 0600 by deploy/install.sh,
+# because it holds a Pi-hole password. The app logs a warning if other users
+# can read it.
+
+# Pi-hole web server. The app talks to its v6 REST API at <api_url>/api.
+api_url = "http://127.0.0.1"
+
+# Pi-hole app password (Settings > Web interface / API > Configure app password).
+# Leave empty if your Pi-hole has no password.
+password = ""
+
+# Seconds between summary/status refreshes.
+refresh_s = 5
+
+# Seconds between 24h history refreshes (Pi-hole buckets it by 10 minutes).
+history_refresh_s = 60
+
+# Rotator contract directory (state.json and signals/).
+state_dir = "/run/pihome"
+
+# Signal file name; must match this app's `name` in /etc/pihome/rotator.toml.
+signal_name = "pihole-tui"

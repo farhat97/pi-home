@@ -1,0 +1,23 @@
+# pihome-rotator configuration.
+# Installed to /etc/pihome/rotator.toml by deploy/install.sh.
+
+# tmux session that holds one window per app (created by pihome-session.service).
+session = "pihome"
+
+# Where state.json and signals/ live. /run is tmpfs, so nothing survives a reboot.
+state_dir = "/run/pihome"
+
+# Seconds each app stays on screen unless it sets its own dwell_s.
+dwell_s = 60
+
+# Apps in rotation order. `name` is also the signal file name the app writes
+# (signals/<name>.json). `window` is the tmux window target and defaults to
+# `name`. Each app must also be listed in /etc/pihome/apps, which the session
+# service uses to create the windows.
+[[apps]]
+name = "pihole-tui"
+
+# Later changes add more screens, e.g.:
+# [[apps]]
+# name = "cta-tui"
+# dwell_s = 90

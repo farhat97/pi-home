@@ -95,7 +95,7 @@ Visual consistency comes from one crate, not from each app copying styles:
 
 - Pi-hole v6 serves its API at `/api` on the local web server. Auth is session-based: a password or **app password** is exchanged for a session ID. The app uses an app password from its config file. The older v5 `api.php` is not supported.
 - **Polling cadence:** summary and status every few seconds, and the 24h history at its natural granularity (on the order of minutes). The render tick is 1 s so the countdown stays smooth.
-- If the API is unreachable, the screen stays up and shows the last known values marked stale. If FTL is down, or the API has been unreachable for more than 30 s, the app raises an urgent signal and renews it while the failure lasts.
+- If the API is unreachable, the screen stays up and shows the last known values marked stale. In v6 the API is served by `pihole-FTL` itself, so there is no endpoint that reports "FTL not running": an unreachable API *is* the FTL-down signal. The status line shows FTL down as soon as a poll fails to connect; after 30 s unreachable the app raises an urgent signal and renews it while the failure lasts. `/api/dns/blocking` (`enabled|disabled|failed|unknown`) is shown on the status line, with disabled/failed in the alert color, but does not raise a signal.
 
 ### Mockups
 

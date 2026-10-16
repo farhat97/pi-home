@@ -1,0 +1,24 @@
+---
+source: apps/pihole-tui/src/view.rs
+expression: text
+---
+┌ pi-hole ──────────────────────────────────── [* o o] 42s ┐
+│                                                          │
+│                                                          │
+│                                                          │
+│                                                          │
+│                                                          │
+│                                                          │
+│                                                          │
+│                  waiting for Pi-hole API                 │
+│                 FTL down: API unreachable                │
+│                   http://127.0.0.1/api                   │
+│                     retrying every 5s                    │
+│                                                          │
+│                                                          │
+│                                                          │
+│                                                          │
+│                                                          │
+│                                                          │
+│                                                          │
+└──────────────────────────────────────────────────────────┘

@@ -1,0 +1,7 @@
+---
+source: crates/pihome-ui/src/widgets.rs
+expression: buffer_text(&buf)
+---
+┌ a ──┬ b ─┐
+│     │    │
+└─────┴────┘

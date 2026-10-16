@@ -1,0 +1,24 @@
+#!/bin/sh
+# Runs an app in its tmux window and relaunches it whenever it exits.
+# usage: run-app COMMAND [ARGS...]
+set -u
+
+[ $# -gt 0 ] || { echo "usage: run-app COMMAND [ARGS...]" >&2; exit 2; }
+
+quick=0
+while :; do
+    started=$(date +%s)
+    "$@"
+    status=$?
+    # Back off a little if the app keeps dying right away, but stay within a
+    # few seconds so the screen never sits empty for long.
+    if [ $(( $(date +%s) - started )) -lt 10 ]; then
+        quick=$((quick + 1))
+    else
+        quick=0
+    fi
+    delay=1
+    [ "$quick" -ge 3 ] && delay=5
+    printf '\033[2J\033[Hpi-home: %s exited (status %s), restarting in %ss\n' "$1" "$status" "$delay"
+    sleep "$delay"
+done

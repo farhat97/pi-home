@@ -1,0 +1,22 @@
+[Unit]
+Description=pi-home screen rotator
+After=pihome-session.service
+
+[Service]
+Type=simple
+User=pihome
+Group=pihome
+ExecStart=/usr/local/bin/pihome-rotator --config /etc/pihome/rotator.toml
+# Shared with pihome-session; kept when either service stops.
+RuntimeDirectory=pihome
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
+Restart=always
+RestartSec=2
+# The tmux socket lives under /tmp, so /tmp must stay shared with the session.
+NoNewPrivileges=yes
+ProtectSystem=full
+ProtectHome=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+---
+source: crates/pihome-ui/src/guard.rs
+expression: text
+---
+
+
+
+
+
+
+
+
+                    terminal too small
+                        need 60x20
+                        have 59x20

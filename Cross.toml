@@ -1,0 +1,4 @@
+# Cross-compilation for the Raspberry Pi 4B (64-bit Raspberry Pi OS).
+# Build with: cross build --release --target aarch64-unknown-linux-gnu --workspace
+[build]
+default-target = "aarch64-unknown-linux-gnu"

@@ -1,0 +1,6 @@
+# Apps shown on the pi-home display (/etc/pihome/apps).
+# One per line: WINDOW-NAME COMMAND...
+# The window name must match the app's `window` (or `name`) in rotator.toml.
+# Each command runs in its own tmux window and is restarted if it exits.
+
+pihole-tui /usr/local/bin/pihole-tui --config /etc/pihome/pihole-tui.toml

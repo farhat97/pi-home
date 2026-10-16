@@ -36,15 +36,19 @@ The dashboard SHALL list the most frequently blocked domains with their block co
 - **THEN** the name is truncated with a visible marker and its count stays fully visible
 
 ### Requirement: Service status line
-The dashboard SHALL show whether Pi-hole's DNS service (FTL) is running, the gravity list size, how long ago gravity was updated, and the Pi-hole version.
+The dashboard SHALL show whether Pi-hole's DNS service (FTL) is running, whether blocking is active, the gravity list size, how long ago gravity was updated, and the Pi-hole version. Because Pi-hole v6 serves its API from FTL itself, FTL counts as down when the API cannot be reached.
 
 #### Scenario: Healthy service
 - **WHEN** FTL is running
 - **THEN** the status line shows FTL as ok along with gravity size, gravity age, and version
 
 #### Scenario: FTL down
-- **WHEN** the API reports that FTL is not running
+- **WHEN** the API cannot be reached (connection refused or timed out)
 - **THEN** the status line shows FTL as down in the theme's alert color
+
+#### Scenario: Blocking not active
+- **WHEN** the API reports blocking as disabled or failed
+- **THEN** the status line shows the blocking state in the theme's alert color
 
 ### Requirement: Periodic refresh
 The dashboard SHALL refresh summary and status data at a configurable interval, defaulting to 5 seconds or less, without user interaction.
@@ -84,12 +88,12 @@ The dashboard SHALL stay running when the Pi-hole API is unreachable, keep showi
 - **THEN** the stale marker disappears and values update normally
 
 ### Requirement: Urgent signal on Pi-hole failure
-The dashboard SHALL raise an urgent attention signal while FTL is down or the API has been unreachable for more than 30 seconds, and SHALL clear it once Pi-hole is healthy again.
+The dashboard SHALL raise an urgent attention signal while the API (and therefore FTL) has been unreachable for more than 30 seconds, renew it while the failure lasts, and SHALL clear it once the API responds again. Blocking being disabled or failed does not raise a signal.
 
 #### Scenario: Failure raises signal
-- **WHEN** FTL is reported down
+- **WHEN** the API has been unreachable for more than 30 seconds
 - **THEN** the dashboard raises an urgent signal with a reason describing the failure
 
 #### Scenario: Recovery clears signal
-- **WHEN** FTL is running and the API is responding again
+- **WHEN** the API is responding again
 - **THEN** the dashboard clears its urgent signal
