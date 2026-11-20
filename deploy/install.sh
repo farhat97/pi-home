@@ -7,7 +7,7 @@
 #   sudo ./install.sh uninstall --purge   also delete /etc/pihome and the pihome user
 #
 # Binaries are taken from $BIN_DIR, default: the directory containing this
-# script, then ../target/aarch64-unknown-linux-gnu/release.
+# script, then ../target/{aarch64-unknown-linux-gnu,armv7-unknown-linux-gnueabihf}/release.
 set -eu
 
 here=$(cd "$(dirname "$0")" && pwd)
@@ -24,7 +24,9 @@ die() { printf 'pihome: error: %s\n' "$*" >&2; exit 1; }
 [ "$(id -u)" -eq 0 ] || die "run as root (sudo $0 $*)"
 
 find_bin() {
-    for d in ${BIN_DIR:-} "$here" "$here/../target/aarch64-unknown-linux-gnu/release"; do
+    for d in ${BIN_DIR:-} "$here" \
+        "$here/../target/aarch64-unknown-linux-gnu/release" \
+        "$here/../target/armv7-unknown-linux-gnueabihf/release"; do
         [ -x "$d/$1" ] && { echo "$d/$1"; return; }
     done
     die "binary $1 not found; build it (see README) or set BIN_DIR"

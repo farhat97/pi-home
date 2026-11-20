@@ -21,8 +21,11 @@ systemd
 
 ## Prerequisites
 
-- Raspberry Pi 4B with **64-bit** Raspberry Pi OS (Lite, or set to boot to
-  console: `sudo raspi-config` → *System Options* → *Boot* → *Console*).
+- Raspberry Pi 4B with Raspberry Pi OS, 64-bit (`aarch64`) or 32-bit (`armv7`)
+  (Lite, or set to boot to console: `sudo raspi-config` → *System Options* →
+  *Boot* → *Console*). Check which with `dpkg --print-architecture` (`arm64` or
+  `armhf`); `uname -m` can say `aarch64` on a 32-bit OS, and a binary built for
+  the wrong one fails with "No such file or directory".
 - The 3.5" display working as the **console** on tty1 (the text login prompt
   shows up on it). Driver setup depends on the panel and isn't covered here.
 - **Pi-hole v6**, installed with its official installer
@@ -51,9 +54,13 @@ Cross-compile on a laptop (needs Docker running; `Cross.toml` sets the target):
 
 ```sh
 cargo install cross --locked
+# 64-bit Pi OS (arm64):
 cross build --release --target aarch64-unknown-linux-gnu --workspace
-ls target/aarch64-unknown-linux-gnu/release/{pihome-rotator,pihole-tui}
+# 32-bit Pi OS (armhf):
+cross build --release --target armv7-unknown-linux-gnueabihf --workspace
 ```
+
+The binaries land in `target/<target>/release/` (`pihome-rotator`, `pihole-tui`).
 
 Or build on the Pi itself (slower): install Rust there and run
 `cargo build --release --workspace`; the binaries land in `target/release/`.
@@ -66,7 +73,7 @@ Tests run anywhere: `cargo test --workspace`. The tmux integration test needs
 Copy the deploy directory and the two binaries to the Pi, side by side:
 
 ```sh
-rel=target/aarch64-unknown-linux-gnu/release
+rel=target/aarch64-unknown-linux-gnu/release   # or target/armv7-unknown-linux-gnueabihf/release
 ssh pi@pi.local mkdir -p pihome
 scp -r deploy/* $rel/pihome-rotator $rel/pihole-tui pi@pi.local:pihome/
 ```

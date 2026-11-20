@@ -1,4 +1,7 @@
-# Cross-compilation for the Raspberry Pi 4B (64-bit Raspberry Pi OS).
-# Build with: cross build --release --target aarch64-unknown-linux-gnu --workspace
+# Cross-compilation for the Raspberry Pi (Pi-hole host).
+# 64-bit Raspberry Pi OS: cross build --release --target aarch64-unknown-linux-gnu --workspace
+# 32-bit Raspberry Pi OS: cross build --release --target armv7-unknown-linux-gnueabihf --workspace
+# Check which you need with `dpkg --print-architecture` on the Pi (arm64 or armhf);
+# `uname -m` can say aarch64 on a 32-bit OS, so don't rely on it.
 [build]
 default-target = "aarch64-unknown-linux-gnu"
